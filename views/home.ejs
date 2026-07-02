@@ -7,18 +7,16 @@
 </head>
 <body>
     <h1>Hey Welcome to URL Shortner</h1>
-    
-    <ul>
-        <% urls.forEach(url => { %>
-            <li>
-                <strong><%= url.shortID %></strong> - 
-                
-                <a href="<%= url.redirectUrl %>" target="_blank">
-                    <%= url.redirectUrl %>
-                </a>
-            </li>
-        <% }); %>
-    </ul>
+    <% if(locals.id) { %>
+        <p>Short ID: <%= id %></p>
+    <% } %>
+    <div>
+        <form method="POST" action="/url">
+            <label>Enter Your Original URL:</label>
+            <input type="text" placeholder="https://example.com" name="url"/>
+            <button type="submit">Generate</button>
+        </form>
+    </div>
 
 </body>
 </html>
