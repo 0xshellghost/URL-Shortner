@@ -15,7 +15,7 @@ const Port=8001;
 const MONGO_URI=process.env.MONGODB_URI;
 connectToMongoDb(MONGO_URI);
 app.set("view engine","ejs");
-app.set('views',path.resolve("./views"));
+app.set('views',path.join(__dirname, "views"));
 app.get('/test',async(req,res)=>{
     const allurls=await url.find({});
    console.log("Data from DB:", allurls); 
@@ -42,3 +42,4 @@ app.get('/:shortId',async(req,res)=>{
     res.redirect(redirectUrl);
 })
 app.listen(Port,()=>console.log(`Server Started at port:${Port}`));
+module.exports = app;
