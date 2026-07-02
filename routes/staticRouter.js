@@ -1,6 +1,11 @@
 const express=require('express');
 const router=express.Router();
-router.get('/',(req,res)=>{
-    return res.render("home");
+const url = require('../models/url');
+
+router.get('/', async (req,res)=>{
+    const allurls = await url.find({});
+    return res.render("home", {
+        urls: allurls,
+    });
 })
 module.exports=router;

@@ -16,18 +16,11 @@ const MONGO_URI=process.env.MONGODB_URI;
 connectToMongoDb(MONGO_URI);
 app.set("view engine","ejs");
 app.set('views',path.join(__dirname, "views"));
-app.get('/test',async(req,res)=>{
-    const allurls=await url.find({});
-   console.log("Data from DB:", allurls); 
-    return res.render("home",{
-        urls:allurls,
-    });
-})
 app.get('/:shortId',async(req,res)=>{
     const shortID=req.params.shortId;
     const entry=await url.findOneAndUpdate({shortID},{
         $push:{
-            visitedHistory:{
+            visitHistory:{
                 timestamp:Date.now(),
             },
         },

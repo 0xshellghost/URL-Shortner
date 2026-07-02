@@ -14,16 +14,18 @@ async function handleGenerateNewShortURL(req,res){
     await url.create({
         shortID: shortID,      
         redirectUrl: targetUrl, 
-        visitedHistory: [],
+        visitHistory: [],
     });
+    const allurls = await url.find({});
     return res.render("home",{
         id:shortID,
+        urls: allurls,
     });
 }
 async function handleGetAnalytics(req,res){
     const shortId=req.params.shortId;
     const entry=await url.findOne({shortID});
-    return res.status(200).json({totalclicks:entry.visitedHistory.length,analytics:entry.visitedHistory});
+    return res.status(200).json({totalclicks:entry.visitHistory.length,analytics:entry.visitHistory});
 }
 module.exports = {
   handleGenerateNewShortURL,
