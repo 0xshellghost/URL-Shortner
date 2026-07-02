@@ -1,46 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
 </head>
+
 <body>
     <h1>Hey Welcome to URL Shortner</h1>
     <% if(locals.id) { %>
-        <p>Short ID: <%= id %></p>
-    <% } %>
-    <div>
-        <form method="POST" action="/url">
-            <label>Enter Your Original URL:</label>
-            <input type="text" placeholder="https://example.com" name="url"/>
-            <button type="submit">Generate</button>
-        </form>
-    </div>
-    <div>
-        <% if(locals.urls){ %>
-            <table>
-                <thead>
-                    <th>S. No.</th>
-                    <th>Short ID</th>
-                    <th>Redirect URL</th>
-                    <th>Total Clicks</th>
-                    <th>Created At</th>
-                </thead>
-                <tbody>
-                    <% urls.forEach((url,index) => { %>
-                        <tr>
-                            <td><%= index + 1 %></td>
-                            <td><%= url.shortID %></td>
-                            <td><%= url.redirectUrl %></td>
-                            <td><%= url.visitHistory ? url.visitHistory.length : 0 %></td>
-                            <td><%= url.createdAt %></td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
+        <p>Short ID: <%= id %>
+        </p>
         <% } %>
-    </div>
+            <div>
+                <form method="POST" action="/url">
+                    <label>Enter Your Original URL:</label>
+                    <input type="text" placeholder="https://example.com" name="url" />
+                    <button type="submit">Generate</button>
+                </form>
+            </div>
+            <div>
+                <% if(locals.urls){ %>
+                    <table>
+                        <thead>
+                            <th>S. No.</th>
+                            <th>Short ID</th>
+                            <th>Redirect URL</th>
+                            <th>Total Clicks</th>
+                            <th>Created At</th>
+                        </thead>
+                        <tbody>
+                            <% urls.forEach((url,index)=> { %>
+                                <tr>
+                                    <td>
+                                        <%= index + 1 %>
+                                    </td>
+                                    <td>
+                                        <%= url.shortID %>
+                                    </td>
+                                    <td>
+                                        <%= url.redirectUrl %>
+                                    </td>
+                                    <td>
+                                        <%= url.visitHistory ? url.visitHistory.length : 0 %>
+                                    </td>
+                                    <td>
+                                        <%= url.createdAt.toLocaleString() %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                    <% } %>
+            </div>
 
 </body>
+
 </html>

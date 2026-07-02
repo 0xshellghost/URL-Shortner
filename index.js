@@ -1,27 +1,41 @@
 require('dotenv').config();
-const express=require('express');
-const urlRoute=require('./routes/url');
-const path=require('path');
-const staticRouter=require('./routes/staticRouter');
-const connectToMongoDb=require('./connect');
-const url=require('./models/url');
-const app=express();
-app.use(express.json());
-app.use(express.urlencoded({extended:false}));
-app.use('/',staticRouter);
-app.use('/url',urlRoute);
+const express = require('express');
+const urlRoute = require('./routes/url');
+const userRoute = require('./routes/user');
+const cookieParser = require('cookie-parser');
+const path = require('path');
+const {restrictToLoggedinUserOnly,checkAuth} = require('./middlewares/auth')
+const staticRouter = require('./routes/staticRouter');
+const connectToMongoDb = require('./connect');
+const url = require('./models/url');
+const app = express();
 
-const Port=8001;
-const MONGO_URI=process.env.MONGODB_URI;
+//middleware
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+//routes
+app.use('/',checkAuth,staticRouter);
+app.use('/url',restrictToLoggedinUserOnly, urlRoute);
+app.use('/user',userRoute);
+
+//connect to mongodb
+const Port = 8001;
+const MONGO_URI = process.env.MONGODB_URI;
 connectToMongoDb(MONGO_URI);
-app.set("view engine","ejs");
-app.set('views',path.join(__dirname, "views"));
-app.get('/:shortId',async(req,res)=>{
-    const shortID=req.params.shortId;
-    const entry=await url.findOneAndUpdate({shortID},{
-        $push:{
-            visitHistory:{
-                timestamp:Date.now(),
+
+//ejs
+app.set("view engine", "ejs");
+app.set('views', path.join(__dirname, "views"));
+
+//get request for short id 
+app.get('/:shortId', async (req, res) => {
+    const shortID = req.params.shortId;
+    const entry = await url.findOneAndUpdate({ shortID }, {
+        $push: {
+            visitHistory: {
+                timestamp: Date.now(),
             },
         },
     });
@@ -34,5 +48,5 @@ app.get('/:shortId',async(req,res)=>{
     }
     res.redirect(redirectUrl);
 })
-app.listen(Port,()=>console.log(`Server Started at port:${Port}`));
+app.listen(Port, () => console.log(`Server Started at port:${Port}`));
 module.exports = app;
