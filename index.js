@@ -23,7 +23,19 @@ app.use('/user',userRoute);
 //connect to mongodb
 const Port = 8001;
 const MONGO_URI = process.env.MONGODB_URI;
-connectToMongoDb(MONGO_URI);
+const User = require('./models/user');
+connectToMongoDb(MONGO_URI).then(async () => {
+    const adminExists = await User.findOne({ email: "admin@gmail.com" });
+    if (!adminExists) {
+        await User.create({
+            name: "admin",
+            email: "admin@gmail.com",
+            password: "admin@123",
+            role: "ADMIN"
+        });
+        console.log("Hardcoded admin user created");
+    }
+});
 
 //ejs
 app.set("view engine", "ejs");
