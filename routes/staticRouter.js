@@ -1,7 +1,14 @@
 const express=require('express');
 const router=express.Router();
 const url = require('../models/url');
-
+const {restrictTo} = require('../middlewares/auth');
+router.get('/admin/urls',restrictTo(["ADMIN"]), async (req,res)=>{
+    const allurls = await url.find({});
+    return res.render("home", {
+        urls: allurls,
+        user: req.user,
+    });
+})  
 router.get('/', async (req,res)=>{
     if(!req.user) {
         return res.render("home", {
@@ -19,6 +26,9 @@ router.get('/signup',(req,res)=>{
     return res.render("signup");
 })
 router.get('/login',(req,res)=>{
-    return res.render("login");
+    const user=req.user;
+    return res.render("login",{
+        user,
+    });
 })
 module.exports=router;

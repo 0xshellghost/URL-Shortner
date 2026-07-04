@@ -4,7 +4,7 @@ const urlRoute = require('./routes/url');
 const userRoute = require('./routes/user');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const {restrictToLoggedinUserOnly,checkAuth} = require('./middlewares/auth')
+const {checkForAuthentication,restrictTo} = require('./middlewares/auth')
 const staticRouter = require('./routes/staticRouter');
 const connectToMongoDb = require('./connect');
 const url = require('./models/url');
@@ -14,10 +14,10 @@ const app = express();
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(checkForAuthentication);
 //routes
-app.use('/',checkAuth,staticRouter);
-app.use('/url',restrictToLoggedinUserOnly, urlRoute);
+app.use('/',staticRouter);
+app.use('/url',restrictTo(["NORMAL"]), urlRoute);
 app.use('/user',userRoute);
 
 //connect to mongodb

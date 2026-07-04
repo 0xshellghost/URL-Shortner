@@ -10,7 +10,7 @@ async function handleUserSignup(req, res) {
         password
     });
     const token = setUser(user);
-    res.cookie("uid", token);
+    res.cookie("token", token);
     return res.redirect('/');
 }
 async function handleUserLogin(req,res){
@@ -27,10 +27,15 @@ async function handleUserLogin(req,res){
         });
     }
     const token = setUser(user);
-    res.cookie("uid", token);
+    res.cookie("token", token);
     return res.redirect('/');
+}
+function handleUserLogout(req, res) {
+    res.clearCookie("token");
+    return res.redirect("/");
 }
 module.exports={
     handleUserSignup,
     handleUserLogin,
+    handleUserLogout,
 }

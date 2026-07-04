@@ -8,11 +8,23 @@
 </head>
 
 <body>
-    <h1>Hey Welcome to URL Shortner</h1>
+    <div style="text-align: right; padding: 10px;">
+        <% if (!locals.user) { %>
+            <a href="/signup"><button>Signup</button></a>
+            <a href="/login"><button>Login</button></a>
+            <% } else { %>
+                <%= user.name %>
+                    <form method="POST" action="/user/logout">
+                        <button type="submit">Logout</button>
+                    </form>
+                    <% } %>
+    </div>
+    <h1>Hey <%= locals.user ? user.name : 'Guest' %> Welcome to URL Shortner</h1>
     <% if(locals.id) { %>
         <p>Short ID: <%= id %>
         </p>
         <% } %>
+            <% if(locals.user) { %>
             <div>
                 <form method="POST" action="/url">
                     <label>Enter Your Original URL:</label>
@@ -20,6 +32,7 @@
                     <button type="submit">Generate</button>
                 </form>
             </div>
+            <% } %>
             <div>
                 <% if(locals.urls){ %>
                     <table>
